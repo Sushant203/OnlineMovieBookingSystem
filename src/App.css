@@ -67,3 +67,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* In your CSS file */
+html, body, #root, .app-container {
+  height: 100%;
+  margin: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
