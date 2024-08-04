@@ -1,3 +1,4 @@
+import NowShowing from "@/components/movie/NowShowing";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -10,7 +11,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 const HomePage = () => {
   const carouselData = [
-    { images: "/movie logo.png" },
+    { images: "/deadpool and wolverine1.jpeg" },
     {
       images:
         "https://images.unsplash.com/photo-1721332154191-ba5f1534266e?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -32,7 +33,7 @@ const HomePage = () => {
   return (
     <main>
       <section className="relative">
-        {/* hero section */}
+       
         <Carousel
           plugins={[
             Autoplay({
@@ -71,10 +72,14 @@ const HomePage = () => {
         </Carousel>
       </section>
 
-      <section>
-        {/* Now Showing */}
-        <p>knsfgjnefs</p>
-      </section>
+     <section className="container py-10">
+  {/* Now Showing */}
+  <div className="bg-slate-400 contain-inline-size px-2 py-3">
+    <h1 className="text-2xl font-bold font-serif ">Now Showing</h1>
+  </div>
+  <NowShowing />
+</section>
+
 
       <section>
         {/* upcoming */}
