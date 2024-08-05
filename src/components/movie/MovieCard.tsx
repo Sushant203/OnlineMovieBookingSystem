@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Movie } from '@/types/Movie';
+import { Card, CardContent } from '../ui/card';
+import { Movie } from '../../types/Movie';
 import Modal from './TheatreModalBox'; // Import the Modal component
 
 type Props = {

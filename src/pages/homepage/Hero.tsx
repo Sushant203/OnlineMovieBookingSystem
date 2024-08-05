@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from "../../components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
+} from '../../components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
-import apiClient from '@/axiosCnofig';
-// import { Movie } from '@/types/Movie';
+
+type Movie = {
+  poster: string;
+};
 
 const Hero = () => {
-  const [carouselData, setCarouselData] = useState<{ images: string }[]>([]);
+  const [carouselData, setCarouselData] = useState<Movie[]>([]);
 
   useEffect(() => {
     // Fetch movie posters from the database
-    axios.get(`http://localhost:4000/movie`)
-      .then(response => {
-        const moviePosters = response.data.map((movie: { poster: string }) => ({
-          images: `${apiClient}/${movie.poster}`
-        }));
-        setCarouselData(moviePosters);
-      })
-      .catch(error => console.error('Error fetching movie data:', error));
+    const fetchImagePoster = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/movie/now-showing'); // Replace with your actual API endpoint
+        setCarouselData(response.data);
+      } catch (error) {
+        console.error('Error fetching movie data:', error);
+      }
+    };
+    fetchImagePoster();
   }, []);
 
   return (
@@ -50,12 +53,14 @@ const Hero = () => {
               <div className="p-1 h-full">
                 <Card className="w-full mx-auto">
                   <CardContent className="flex items-center justify-center p-0 h-[75vh]">
-                    <img
-                      src={item.images}
-                      alt={`Movie Poster ${index + 1}`}
-                      sizes="100vw"
-                      className="h-full w-full object-cover"
-                    />
+                    <div className="w-full h-full aspect-w-16 aspect-h-9">
+                      <img
+                        src={`http://localhost:4000/${item.poster}`}
+                        alt={`Movie Poster ${index + 1}`}
+                        sizes="100vw"
+                        className="h-full w-full object-contain"
+                      />
+                    </div>
                   </CardContent>
                 </Card>
               </div>
