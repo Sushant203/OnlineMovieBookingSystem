@@ -1,5 +1,6 @@
 // types.ts
 export interface Movie {
+  categoryname: string;
   movieid: number;
   title: string;
   poster: string;

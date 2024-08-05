@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Card, CardContent } from "../../components/ui/card";
 import {
   Carousel,
@@ -7,8 +7,8 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '../../components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
+} from "../../components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 type Movie = {
   poster: string;
@@ -21,10 +21,12 @@ const Hero = () => {
     // Fetch movie posters from the database
     const fetchImagePoster = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/movie/now-showing'); // Replace with your actual API endpoint
+        const response = await axios.get(
+          "http://localhost:4000/movie/now-showing"
+        ); // Replace with your actual API endpoint
         setCarouselData(response.data);
       } catch (error) {
-        console.error('Error fetching movie data:', error);
+        console.error("Error fetching movie data:", error);
       }
     };
     fetchImagePoster();
@@ -39,17 +41,14 @@ const Hero = () => {
           }),
         ]}
         opts={{
-          align: 'center',
+          align: "center",
           loop: true,
         }}
         className="w-11/12 h-3/4 mx-auto"
       >
         <CarouselContent>
           {carouselData.map((item, index) => (
-            <CarouselItem
-              key={index}
-              className="w-fit h-fit"
-            >
+            <CarouselItem key={index} className="w-fit h-fit">
               <div className="p-1 h-full">
                 <Card className="w-full mx-auto">
                   <CardContent className="flex items-center justify-center p-0 h-[75vh]">
