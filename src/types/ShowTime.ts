@@ -1,4 +1,6 @@
 export interface ShowTime {
+  movie_title: string;
+  theater_name: string;
   movie_id: number;
   theater_id: number;
   show_date: string;

@@ -1,19 +1,18 @@
 import { Movie } from "@/types/Movie";
 import { ShowTime } from "@/types/ShowTime";
-import { ITheater } from "@/types/Theater";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-type Props = {
-  Theater: ITheater;
-  Movie: Movie;
-};
-
-export default function MovieTheater({}: Props) {
-  const { movieId } = useParams<{ movieId: string }>();
+export default function MovieTheater() {
+  const { movieId, theaterId } = useParams<{
+    movieId: string;
+    theaterId: string;
+  }>();
   const [moviedata, setMoviedata] = useState<Movie[]>([]);
   const [showtimeData, setShowTimeData] = useState<ShowTime[]>([]);
+
   const fetchMovie = async () => {
     try {
       const response = await axios.get(
@@ -25,9 +24,12 @@ export default function MovieTheater({}: Props) {
       console.error(error);
     }
   };
+
   const fetchShowTime = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/showtime`);
+      const response = await axios.get(
+        `http://localhost:4000/showtime/movie/${movieId}/theater/${theaterId}`
+      );
       setShowTimeData(response.data);
     } catch (error) {
       console.log(error);
@@ -37,7 +39,7 @@ export default function MovieTheater({}: Props) {
   useEffect(() => {
     fetchMovie();
     fetchShowTime();
-  }, [movieId]);
+  }, [movieId, theaterId]);
 
   return (
     <div className="container mx-auto p-4">
@@ -72,6 +74,36 @@ export default function MovieTheater({}: Props) {
           </div>
         </div>
       ))}
+
+      {/* Showtime Section */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-semibold mb-4">Showtimes</h2>
+        {showtimeData.length > 0 ? (
+          <div>
+            {showtimeData.map((showtime, index) => (
+              <div
+                key={index}
+                className="bg-gray-100 p-4 rounded-lg shadow mb-4"
+              >
+                <p className="text-lg font-bold mb-2">
+                  {new Date(showtime.show_date).toLocaleDateString()} -{" "}
+                  {showtime.show_time}
+                </p>
+                <p className="text-gray-700 mb-1">
+                  <strong>Theater:</strong> {showtime.theater_name}
+                </p>
+                <p className="text-gray-700 mb-1">
+                  <strong>Movie:</strong> {showtime.movie_title}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-600">
+            No showtimes available for this movie and theater.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

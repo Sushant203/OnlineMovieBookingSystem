@@ -1,4 +1,3 @@
-import React from "react";
 import { NavData } from "../../data/navdata";
 import { Link } from "react-router-dom";
 
