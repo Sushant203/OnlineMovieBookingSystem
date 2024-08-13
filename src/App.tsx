@@ -5,6 +5,7 @@ import HomePage from "./pages/homepage/HomePage";
 import About from "./pages/About";
 import MovieTheaterPage from "./components/movie/MovieTheater";
 import LoginUi from "./components/login/LoginUi";
+import Seat from "./app/seat";
 // import NowShowing from './components/movie/NowShowing'
 
 function App() {
@@ -19,6 +20,10 @@ function App() {
             element={<MovieTheaterPage />}
           />
           <Route path="/login" element={<LoginUi />} />
+          <Route
+            path="/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
+            element={<Seat />}
+          />
           {/* <Route path={'/nowshowing'} element={<NowShowing/>}/> */}
         </Route>
       </Routes>
