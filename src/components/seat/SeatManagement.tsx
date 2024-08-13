@@ -26,7 +26,7 @@ export default function SeatManagement() {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/seat`);
+        const response = await axios.get(`http://localhost:4000/seat/showtime/${showtimeId}`);
         setSeats(response.data);
       } catch (error) {
         console.error("Failed to fetch seats", error);
