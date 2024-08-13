@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Seat = {
   seat_number: string;
@@ -8,6 +11,12 @@ type Seat = {
 };
 
 export default function SeatManagement() {
+  const { showTimeId } = useParams<{
+    movieId: string;
+    theaterId: string;
+    showTimeId: string;
+  }>();
+  console.log(showTimeId, "shotibdfkbdkjfbdsjf kjbjsdfbuydgbs");
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
   const MAX_SEATS = 7; // Maximum number of seats allowed
@@ -37,7 +46,7 @@ export default function SeatManagement() {
         !updatedSelectedSeats.has(seatid) &&
         updatedSelectedSeats.size >= MAX_SEATS
       ) {
-        alert(`You can select a maximum of ${MAX_SEATS} seats.`);
+        toast.error(`You can select a maximum of ${MAX_SEATS} seats.`);
         return prevSelectedSeats;
       }
 
@@ -49,6 +58,32 @@ export default function SeatManagement() {
       }
       return updatedSelectedSeats;
     });
+  };
+
+  const handleBookNow = async () => {
+    if (selectedSeats.size === 0) {
+      toast.error("Please select at least one seat.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:4000/booking", {
+        user_id: 9, // Replace with actual user ID
+        showtime_id: showTimeId, // Replace with actual showtime ID
+        seat_ids: Array.from(selectedSeats), // Array of selected seat IDs
+      });
+
+      if (response.status === 200) {
+        toast.success("Booking successful!");
+        // Optionally, reset the selected seats
+        setSelectedSeats(new Set());
+      } else {
+        toast.error("Failed to book seats. Please try again.");
+      }
+    } catch (error) {
+      console.error("Booking failed", error);
+      toast.error("An error occurred while booking. Please try again.");
+    }
   };
 
   // Calculate total price
@@ -92,15 +127,15 @@ export default function SeatManagement() {
         </div>
         <div className="space-y-6">
           {Object.keys(sortedRows).map((rowKey) => (
-            <div key={rowKey} className="flex items-center mb-6">
-              <span className="w-12 text-center font-semibold text-gray-700 text-xl">
+            <div key={rowKey} className="flex items-center mb-4">
+              <span className="w-10 text-center font-semibold text-gray-700 text-lg">
                 {rowKey}
               </span>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-10 gap-2">
                 {sortedRows[rowKey].map((seat) => (
                   <label
                     key={seat.seatid}
-                    className={`flex items-center justify-center cursor-pointer w-16 h-16 border rounded-lg ${
+                    className={`flex items-center justify-center cursor-pointer w-10 h-10 border rounded-md ${
                       seat.status === "Reserved"
                         ? "bg-gray-500 cursor-not-allowed"
                         : selectedSeats.has(seat.seatid)
@@ -115,7 +150,7 @@ export default function SeatManagement() {
                       onChange={() => handleSeatClick(seat.seatid, seat.status)}
                       className="sr-only"
                     />
-                    <span className="text-center text-lg font-semibold">
+                    <span className="text-center text-sm font-semibold">
                       {seat.seat_number}
                     </span>
                   </label>
@@ -128,7 +163,14 @@ export default function SeatManagement() {
           <h2 className="text-xl font-semibold text-gray-800">Total Price</h2>
           <p className="text-2xl font-bold text-gray-700">{`Rs.${totalPrice}`}</p>
         </div>
+        <button
+          onClick={handleBookNow}
+          className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300"
+        >
+          Book Now
+        </button>
       </div>
+      <ToastContainer />
     </div>
   );
 }

@@ -1,4 +1,4 @@
 export interface ITheater {
-  theater_name: String;
-  theater_location: String;
+  theater_name: string;
+  theater_location: string;
 }
