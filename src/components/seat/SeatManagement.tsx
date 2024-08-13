@@ -7,16 +7,17 @@ import "react-toastify/dist/ReactToastify.css";
 type Seat = {
   seat_number: string;
   seatid: string;
-  status: string; // Available, Reserved, or Selected
+  status: string; // Available, Reserved, or Booked
 };
 
 export default function SeatManagement() {
-  const { showTimeId } = useParams<{
+  const { showtimeId } = useParams<{
     movieId: string;
     theaterId: string;
-    showTimeId: string;
+    showtimeId: string;
   }>();
-  console.log(showTimeId, "shotibdfkbdkjfbdsjf kjbjsdfbuydgbs");
+  console.log(showtimeId, "showtimeId");
+
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
   const MAX_SEATS = 7; // Maximum number of seats allowed
@@ -25,18 +26,20 @@ export default function SeatManagement() {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/seat");
+        const response = await axios.get(`http://localhost:4000/seat`);
         setSeats(response.data);
       } catch (error) {
         console.error("Failed to fetch seats", error);
       }
     };
 
-    fetchSeats();
-  }, []);
+    if (showtimeId) {
+      fetchSeats();
+    }
+  }, [showtimeId]);
 
   const handleSeatClick = (seatid: string, status: string) => {
-    if (status === "Reserved") return; // Do nothing if seat is reserved
+    if (status === "Booked" || status === "Reserved") return; // Do nothing if seat is booked or reserved
 
     setSelectedSeats((prevSelectedSeats) => {
       const updatedSelectedSeats = new Set(prevSelectedSeats);
@@ -69,14 +72,13 @@ export default function SeatManagement() {
     try {
       const response = await axios.post("http://localhost:4000/booking", {
         user_id: 9, // Replace with actual user ID
-        showtime_id: showTimeId, // Replace with actual showtime ID
+        showtime_id: showtimeId, // Use the correct showtime ID
         seat_ids: Array.from(selectedSeats), // Array of selected seat IDs
       });
 
       if (response.status === 200) {
         toast.success("Booking successful!");
-        // Optionally, reset the selected seats
-        setSelectedSeats(new Set());
+        setSelectedSeats(new Set()); // Optionally reset the selected seats
       } else {
         toast.error("Failed to book seats. Please try again.");
       }
@@ -136,7 +138,7 @@ export default function SeatManagement() {
                   <label
                     key={seat.seatid}
                     className={`flex items-center justify-center cursor-pointer w-10 h-10 border rounded-md ${
-                      seat.status === "Reserved"
+                      seat.status === "Booked" || seat.status === "Reserved"
                         ? "bg-gray-500 cursor-not-allowed"
                         : selectedSeats.has(seat.seatid)
                         ? "bg-blue-600 text-white"
@@ -145,7 +147,9 @@ export default function SeatManagement() {
                   >
                     <input
                       type="checkbox"
-                      disabled={seat.status === "Reserved"}
+                      disabled={
+                        seat.status === "Booked" || seat.status === "Reserved"
+                      }
                       checked={selectedSeats.has(seat.seatid)}
                       onChange={() => handleSeatClick(seat.seatid, seat.status)}
                       className="sr-only"
