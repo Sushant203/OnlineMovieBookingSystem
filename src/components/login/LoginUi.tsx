@@ -3,9 +3,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 
-type Props = {};
+// type Props = {};
 
-export default function LoginUi({}: Props) {
+export default function LoginUi() {
   const initialValues = {
     email: "",
     password: "",

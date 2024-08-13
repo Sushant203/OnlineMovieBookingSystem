@@ -12,7 +12,7 @@ const HomePage = () => {
 
      <section className="container py-10">
   {/* Now Showing */}
-  <div className="bg-slate-400 contain-inline-size px-2 py-3">
+  <div className=" contain-inline-size px-2 py-3">
     <h1 className="text-2xl font-bold font-serif ">Now Showing</h1>
   </div>
   <NowShowing />
