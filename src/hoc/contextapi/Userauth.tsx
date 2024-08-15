@@ -20,20 +20,18 @@ function UserAuthContextApi({ children }: UserAuthContextApiProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
-
+  const movieId = localStorage.getItem("movieId");
+  const theaterId = localStorage.getItem("theaterId");
+  const showtimeId = localStorage.getItem("showtimeId");
   console.log(token);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
-      if (
-        location.pathname === "/login" ||
-        location.pathname === "/signup" ||
-        location.pathname === "/landing"
-      ) {
+      if (location.pathname === "/login") {
         navigate(
-          "/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
+          `/seat/movie/${movieId}/theater/${theaterId}/showtime/${theaterId}`
         );
       }
     } else {

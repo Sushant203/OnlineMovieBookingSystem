@@ -11,7 +11,9 @@ type Seat = {
 };
 
 export default function SeatManagement() {
-  const { showtimeId } = useParams<{
+  const userId = localStorage.getItem("user_id");
+
+  const { showtimeId, theaterId, movieId } = useParams<{
     movieId: string;
     theaterId: string;
     showtimeId: string;
@@ -26,7 +28,9 @@ export default function SeatManagement() {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/seat`);
+        const response = await axios.get(
+          `http://localhost:4000/seat/${showtimeId}`
+        );
         setSeats(response.data);
       } catch (error) {
         console.error("Failed to fetch seats", error);
@@ -71,7 +75,7 @@ export default function SeatManagement() {
 
     try {
       const response = await axios.post("http://localhost:4000/booking", {
-        user_id: 9, // Replace with actual user ID
+        user_id: userId, // Replace with actual user ID
         showtime_id: showtimeId, // Use the correct showtime ID
         seat_ids: Array.from(selectedSeats), // Array of selected seat IDs
       });
