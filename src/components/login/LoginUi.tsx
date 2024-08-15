@@ -3,6 +3,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { SignInFormDefaultValues, signInFormField,TSignInFormSchema  } from "@/types/Login";
 
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 export default function LoginUi() {
@@ -10,6 +13,36 @@ export default function LoginUi() {
   const validationSchema = signInFormField;
 
  
+  const movieId = localStorage.getItem("movieId");
+  const theaterId = localStorage.getItem("theaterId");
+  const showtimeId = localStorage.getItem("showtimeId");
+  const navigate = useNavigate();
+  const submit = async (val: TSignInFormSchema) => {
+    try {
+      const res = await axios.post("http://localhost:4000/register/login", val);
+      if (res.status === 200) {
+        toast.success("Logged in successfully");
+        // console.log(res.data);
+        const user_id = res.data.user.userid;
+        console.log(user_id, "dfkjdbkjf nbd fn");
+        localStorage.setItem("user_id", user_id);
+        localStorage.setItem("token", res.data.token);
+        navigate(
+          `/seat/movie/${movieId}/theater/${theaterId}/showtime/${showtimeId}`
+        );
+      } else {
+        navigate(`/movie/${movieId}/theater/${theaterId}`);
+      }
+
+      // console.log(res);
+    } catch (error) {
+      toast.error("Email or Password Does not Match");
+      console.log(error);
+    }
+  };
+ 
+
+  
 
   const formFields = [
     {
@@ -30,6 +63,7 @@ export default function LoginUi() {
 
   const onSubmit = (values:TSignInFormSchema) => {
     console.log(values);
+    submit(values);
     // Perform login logic here
   };
 

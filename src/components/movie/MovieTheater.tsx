@@ -79,6 +79,7 @@ export default function MovieTheater() {
 
   const handleProceed = () => {
     if (selectedShowtime?.showtimeId) {
+      localStorage.setItem("showtimeId", selectedShowtime.showtimeId);
       navigate(
         `/seat/movie/${movieId}/theater/${theaterId}/showtime/${selectedShowtime.showtimeId}`
       );
@@ -105,6 +106,12 @@ export default function MovieTheater() {
       obj[key] = groupedShowtimes[key];
       return obj;
     }, {} as { [key: string]: ShowTime[] });
+  if (movieId) {
+    localStorage.setItem("movieId", movieId);
+  }
+  if (theaterId) {
+    localStorage.setItem("theaterId", theaterId);
+  }
 
   return (
     <div className="container mx-auto p-4">

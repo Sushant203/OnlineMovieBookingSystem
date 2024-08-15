@@ -55,7 +55,7 @@ const Hero = () => {
                     <div className="w-full h-full aspect-w-16 aspect-h-9">
                       <img
                         src={`http://localhost:4000/${item.poster}`}
-                        alt={`Movie Poster ${index + 1}`}
+                        alt={item.poster}
                         sizes="100vw"
                         className="h-full w-full object-contain"
                       />
