@@ -1,23 +1,15 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { SignInFormDefaultValues, signInFormField,TSignInFormSchema  } from "@/types/Login";
 
-// type Props = {};
+
 
 export default function LoginUi() {
-  const initialValues = {
-    email: "",
-    password: "",
-  };
+  const initialValues = SignInFormDefaultValues;
+  const validationSchema = signInFormField;
 
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
-  });
+ 
 
   const formFields = [
     {
@@ -36,7 +28,7 @@ export default function LoginUi() {
     },
   ];
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values:TSignInFormSchema) => {
     console.log(values);
     // Perform login logic here
   };
