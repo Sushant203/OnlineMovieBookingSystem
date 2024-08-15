@@ -1,10 +1,31 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // type Props = {};
 
 export default function LoginUi() {
+  const navigate = useNavigate();
+  const submit = async (val: any) => {
+    try {
+      const res = await axios.post("http://localhost:4000/register/login", val);
+      if (res.status === 200) {
+        toast.success("Logged in successfully");
+        console.log("sgsafg");
+        const user_id = res.data[0].userid;
+        console.log(user_id, "dfkjdbkjf nbd fn");
+        localStorage.setItem("user_id", user_id);
+        localStorage.setItem("token", res.data.token);
+      }
+      console.log(res);
+    } catch (error) {
+      toast.error("Email or Password Does not Match");
+      console.log(error);
+    }
+  };
   const initialValues = {
     email: "",
     password: "",

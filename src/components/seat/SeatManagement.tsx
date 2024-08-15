@@ -20,13 +20,15 @@ export default function SeatManagement() {
 
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
-  const MAX_SEATS = 7; // Maximum number of seats allowed
+  const MAX_SEATS = 10; // Maximum number of seats allowed
   const PRICE_PER_SEAT = 300; // Price per seat
 
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/seat`);
+        const response = await axios.get(
+          `http://localhost:4000/seat/${showtimeId}`
+        );
         setSeats(response.data);
       } catch (error) {
         console.error("Failed to fetch seats", error);
@@ -139,7 +141,7 @@ export default function SeatManagement() {
                     key={seat.seatid}
                     className={`flex items-center justify-center cursor-pointer w-10 h-10 border rounded-md ${
                       seat.status === "Booked" || seat.status === "Reserved"
-                        ? "bg-gray-500 cursor-not-allowed"
+                        ? "bg-gray-500 cursor-no-drop"
                         : selectedSeats.has(seat.seatid)
                         ? "bg-blue-600 text-white"
                         : "bg-white"
