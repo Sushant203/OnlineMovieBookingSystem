@@ -26,9 +26,13 @@ export default function LoginUi() {
         const user_id = res.data.user.userid;
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("token", res.data.token);
-        navigate(
-          `/seat/movie/${movieId}/theater/${theaterId}/showtime/${showtimeId}`
-        );
+        if (movieId && theaterId && showtimeId) {
+          navigate(
+            `/seat/movie/${movieId}/theater/${theaterId}/showtime/${showtimeId}`
+          );
+        } else {
+          navigate("/");
+        }
       } else {
         navigate(`/movie/${movieId}/theater/${theaterId}`);
       }
