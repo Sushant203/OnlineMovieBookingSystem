@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "@/loader/Loader"; // Import the Loader component
 
 type Seat = {
   seat_number: string;
@@ -18,15 +19,16 @@ export default function SeatManagement() {
     theaterId: string;
     showtimeId: string;
   }>();
-  console.log(showtimeId, "showtimeId");
 
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
   const MAX_SEATS = 10; // Maximum number of seats allowed
   const PRICE_PER_SEAT = 300; // Price per seat
 
   useEffect(() => {
     const fetchSeats = async () => {
+      setLoading(true); // Start loading
       try {
         const response = await axios.get(
           `http://localhost:4000/seat/${showtimeId}`
@@ -34,6 +36,8 @@ export default function SeatManagement() {
         setSeats(response.data);
       } catch (error) {
         console.error("Failed to fetch seats", error);
+      } finally {
+        setLoading(false); // End loading
       }
     };
 
@@ -117,6 +121,10 @@ export default function SeatManagement() {
     },
     {}
   );
+
+  if (loading) {
+    return <Loader />; // Show loader while data is loading
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 p-6">
