@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginUi() {
   const initialValues = SignInFormDefaultValues;
-
   const movieId = localStorage.getItem("movieId");
   const theaterId = localStorage.getItem("theaterId");
   const showtimeId = localStorage.getItem("showtimeId");
@@ -26,7 +25,8 @@ export default function LoginUi() {
         const user_id = res.data.user.userid;
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("token", res.data.token);
-        if (movieId && theaterId && showtimeId) {
+        const storedUserId = localStorage.getItem("user_id");
+        if (movieId && theaterId && showtimeId && storedUserId) {
           navigate(
             `/seat/movie/${movieId}/theater/${theaterId}/showtime/${showtimeId}`
           );
