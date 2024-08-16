@@ -36,6 +36,7 @@ export default function LoginUi() {
       } else {
         navigate(`/movie/${movieId}/theater/${theaterId}`);
       }
+      window.location.reload();
     } catch (error) {
       toast.error("Email or Password Does not Match");
       console.log(error);
