@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import logo from "../../../public/logo.jpg";
+import logo from "/logo.jpg";
 const Navbar = () => {
   const [userData, setUserData] = useState<IUserDetail | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,7 +64,7 @@ const Navbar = () => {
             <Link
               key={index}
               to={item.path}
-              className="text-xl font-semibold py-2 px-4 rounded hover:bg-gray-700 hover:text-white transition-colors duration-300"
+              className="text-xl font-semibold rounded hover:border-b px-2 hover:border-black"
             >
               {item.title}
             </Link>
