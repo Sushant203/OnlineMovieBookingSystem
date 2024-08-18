@@ -2,11 +2,10 @@ import { EInputType, TFormField } from "./formField";
 import * as Yup from "yup";
 // import { FaEnvelope, FaLock } from "react-icons/fa";
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
 export const signInFormSchema = Yup.object({
     email: Yup.string()
-        .matches(emailRegex, "email should coantain '@' and should not contain whitespaces")
         .email("Invalid email address")
         .required("Email is required"),
     password: Yup.string()

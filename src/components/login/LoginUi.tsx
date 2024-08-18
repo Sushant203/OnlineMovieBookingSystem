@@ -4,7 +4,7 @@ import {
   SignInFormDefaultValues,
   signInFormSchema, // Import the correct schema
   TSignInFormSchema,
-} from "@/types/Login";
+} from "@/model/Login";
 
 import axios from "axios";
 import { toast } from "react-toastify";
