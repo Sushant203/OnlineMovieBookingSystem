@@ -4,6 +4,7 @@ import {
   SignInFormDefaultValues,
   signInFormSchema, // Import the correct schema
   TSignInFormSchema,
+  // signInFormField
 } from "@/model/Login";
 
 import axios from "axios";
@@ -45,14 +46,14 @@ export default function LoginUi() {
 
   const formFields = [
     {
-      id: "email",
+     
       name: "email",
       type: "email",
       label: "Email Address",
       icon: <FaEnvelope className="text-gray-400 mr-2" />,
     },
     {
-      id: "password",
+     
       name: "password",
       type: "password",
       label: "Password",
@@ -83,25 +84,25 @@ export default function LoginUi() {
           onSubmit={onSubmit}
         >
           <Form>
-            {formFields.map(({ id, name, type, label, icon }) => (
-              <div key={id} className="mb-4">
+            {formFields.map(formFields => (
+              <div key={formFields.name} className="mb-4">
                 <label
-                  htmlFor={id}
+                  htmlFor={formFields.name}
                   className="block text-sm font-medium text-gray-300"
                 >
-                  {label}
+                  {formFields.label}
                 </label>
                 <div className="flex items-center mt-1">
-                  <div className="bg-gray-800 p-2 rounded-l-md">{icon}</div>
+                  <div className="bg-gray-800 p-2 rounded-l-md">{formFields.icon}</div>
                   <Field
-                    id={id}
-                    name={name}
-                    type={type}
+                    // id={id}
+                    name={formFields.name}
+                    type={formFields.type}
                     className="w-full p-2 border-l-0 border-gray-800 rounded-r-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-900 text-white"
                   />
                 </div>
                 <ErrorMessage
-                  name={name}
+                  name={formFields.name}
                   component="div"
                   className="text-red-500 text-sm mt-1"
                 />

@@ -1,3 +1,4 @@
+
 export enum EInputType {
     TEXT = 'text',
     PASSWORD = 'password',
@@ -19,7 +20,8 @@ export type TFormField<T> = ({
     option?: {
         label: string;
         value: string;
-    }[]
+    }[];
+
 }) & {
     required: boolean;
     label: string,

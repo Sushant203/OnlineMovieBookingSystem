@@ -25,8 +25,7 @@ function App() {
             path="/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
             element={<Seat />}
           />
-          <Route path="/signup" element={<SignUp/>}/>
-          {/* <Route path={'/nowshowing'} element={<NowShowing/>}/> */}
+          <Route path="/signup" element={<SignUp />}/>
         </Route>
       </Routes>
     </Router>
