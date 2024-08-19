@@ -4,21 +4,22 @@ import axios from "axios";
 import { Slide, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-
 import { useNavigate } from "react-router-dom";
 import { FaCalendar, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 // import { FaPhone} from "react-icons/fa";
-
+import { FormikHelpers } from "formik";
 const SignUp = () => {
   const initialValues = SignUpFormDefaultValues;
   const navigate = useNavigate();
 
-  const submit = async (values: TSignupFormSchema) => {
+  const postData = async (values: TSignupFormSchema, resetForm:()=> void) => {
     console.log(values);
+    resetForm();
     try {
       const res = await axios.post("http://localhost:4000/register/register", values);
-      console.log("responses:", res);
-      if (res.status === 200) {
+      console.log("responses:", res.status);
+      if (res.status === 201) {
+          console.log("Navigating to login...");
         navigate("/login");
       }
     } catch (error) {
@@ -56,9 +57,9 @@ const SignUp = () => {
     };
   });
 
-  const onSubmit = (values: TSignupFormSchema) => {
+  const onSubmit = (values: TSignupFormSchema,{resetForm}:FormikHelpers<TSignupFormSchema>) => {
     console.log(values);
-    submit(values);
+    postData(values, resetForm);
     toast.success("Registered successfully");
   };
 
