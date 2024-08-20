@@ -19,6 +19,8 @@ export default function SeatManagement() {
     theaterId: string;
     showtimeId: string;
   }>();
+  console.log(theaterId);
+  console.log(movieId);
 
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
@@ -86,8 +88,8 @@ export default function SeatManagement() {
 
       if (response.status === 200) {
         toast.success("Booking successful!");
-        setSelectedSeats(new Set()); // Optionally reset the selected seats
         window.location.reload();
+        setSelectedSeats(new Set()); // Optionally reset the selected seats
       } else {
         toast.error("Failed to book seats. Please try again.");
       }
