@@ -8,7 +8,7 @@ import {
 } from "@/model/Login";
 
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginUi() {
@@ -37,6 +37,12 @@ export default function LoginUi() {
       } else {
         navigate(`/movie/${movieId}/theater/${theaterId}`);
       }
+      if (res.status === 404) {
+        toast.error("user not found");
+      }
+      if (res.status === 401) {
+        toast.error("Invalid Password");
+      }
       window.location.reload();
     } catch (error) {
       toast.error("Email or Password Does not Match");
@@ -46,14 +52,12 @@ export default function LoginUi() {
 
   const formFields = [
     {
-     
       name: "email",
       type: "email",
       label: "Email Address",
       icon: <FaEnvelope className="text-gray-400 mr-2" />,
     },
     {
-     
       name: "password",
       type: "password",
       label: "Password",
@@ -84,7 +88,8 @@ export default function LoginUi() {
           onSubmit={onSubmit}
         >
           <Form>
-            {formFields.map(formFields => (
+            <ToastContainer />
+            {formFields.map((formFields) => (
               <div key={formFields.name} className="mb-4">
                 <label
                   htmlFor={formFields.name}
@@ -93,7 +98,9 @@ export default function LoginUi() {
                   {formFields.label}
                 </label>
                 <div className="flex items-center mt-1">
-                  <div className="bg-gray-800 p-2 rounded-l-md">{formFields.icon}</div>
+                  <div className="bg-gray-800 p-2 rounded-l-md">
+                    {formFields.icon}
+                  </div>
                   <Field
                     // id={id}
                     name={formFields.name}
