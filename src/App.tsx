@@ -7,6 +7,7 @@ import MovieTheaterPage from "./components/movie/MovieTheater";
 import LoginUi from "./components/login/LoginUi";
 import Seat from "./app/seat";
 import SignUp from "./components/signup/SignUp";
+import Movie from "./components/movie/index";
 // import NowShowing from './components/movie/NowShowing'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route element={<Layout />} path={"/"}>
           <Route index element={<HomePage />} />
           <Route path={"/about"} element={<About />} />
+          <Route path="/movies" element={<Movie />} />
           <Route
             path="/movie/:movieId/theater/:theaterId"
             element={<MovieTheaterPage />}
@@ -25,7 +27,7 @@ function App() {
             path="/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
             element={<Seat />}
           />
-          <Route path="/signup" element={<SignUp />}/>
+          <Route path="/signup" element={<SignUp />} />
         </Route>
       </Routes>
     </Router>
