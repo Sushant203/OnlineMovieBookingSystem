@@ -8,6 +8,7 @@ import LoginUi from "./components/login/LoginUi";
 import Seat from "./app/seat";
 import SignUp from "./components/signup/SignUp";
 import Movie from "./components/movie/index";
+import SingleMovie from "./components/SIngleMovie";
 // import NowShowing from './components/movie/NowShowing'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path={"/about"} element={<About />} />
           <Route path="/movies" element={<Movie />} />
+          <Route path="/movie/:movieId" element={<SingleMovie />} />
           <Route
             path="/movie/:movieId/theater/:theaterId"
             element={<MovieTheaterPage />}
