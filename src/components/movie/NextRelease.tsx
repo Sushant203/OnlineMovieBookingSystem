@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MovieCard from "./MovieCard";
 import { Movie } from "../../types/Movie";
+import { useNavigate } from "react-router-dom";
 
 const NextRelease: React.FC = () => {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,7 +15,7 @@ const NextRelease: React.FC = () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/movie/next-release`
-        ); // Replace with your actual API endpoint
+        );
         setMovies(response.data);
       } catch (err) {
         setError("Failed to fetch movies");
@@ -55,7 +57,13 @@ const NextRelease: React.FC = () => {
     <section className="bg-gray-100 p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {movies.map((movie) => (
-          <MovieCard key={movie.movieid} movie={movie} />
+          <div
+            onClick={() => {
+              navigate(`/movie/${movie.movieid}`);
+            }}
+          >
+            <MovieCard key={movie.movieid} movie={movie} showModal={false} />
+          </div>
         ))}
       </div>
     </section>

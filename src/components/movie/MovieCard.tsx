@@ -5,6 +5,7 @@ import Modal from "./TheatreModalBox"; // Import the Modal component
 
 type Props = {
   movie: Movie;
+  showModal: boolean; // Add showModal prop
 };
 
 const formatDuration = (duration: number) => {
@@ -13,12 +14,13 @@ const formatDuration = (duration: number) => {
   return `${hours}hr ${minutes}min`;
 };
 
-const MovieCard = ({ movie }: Props) => {
+const MovieCard = ({ movie, showModal }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const navigate = useNavigate();
 
   const handleCardClick = () => {
-    setIsModalOpen(true); // Open the modal when card is clicked
+    if (showModal) {
+      setIsModalOpen(true); // Only open modal if showModal is true
+    }
   };
 
   const closeModal = () => {
@@ -45,11 +47,13 @@ const MovieCard = ({ movie }: Props) => {
           <p className="text-gray-600">{formatDuration(movie.duration)}</p>
         </div>
       </div>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        movieId={movie.movieid}
-      />
+      {showModal && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          movieId={movie.movieid}
+        />
+      )}
     </>
   );
 };
