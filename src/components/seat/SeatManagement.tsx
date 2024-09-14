@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { PayPalButtons } from "@paypal/react-paypal-js";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../loader/Loader";
 
@@ -23,12 +22,11 @@ const PRICE_PER_SEAT_USD = 5.0; // Fixed price per seat in USD
 export default function SeatManagement() {
   const userId = localStorage.getItem("user_id");
   const { showtimeId } = useParams<Params>();
+  const navigate = useNavigate();
 
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState<boolean>(true);
-  const [paymentComplete, setPaymentComplete] = useState<boolean>(false);
-  const [paypalError, setPayPalError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSeats = async () => {
@@ -75,52 +73,25 @@ export default function SeatManagement() {
   const totalSeats = selectedSeats.size;
   const totalPriceUSD = (totalSeats * PRICE_PER_SEAT_USD).toFixed(2); // Total price in USD
 
-  const handleBookNow = async () => {
+  const handleNext = () => {
     if (selectedSeats.size === 0) {
       toast.error("Please select at least one seat.");
       return;
     }
 
-    if (!paymentComplete) {
-      toast.error("Complete the payment before booking.");
-      return;
-    }
+    // Find selected seat details to pass to PaymentPage
+    const selectedSeatDetails = seats.filter((seat) =>
+      selectedSeats.has(seat.seatid)
+    );
 
-    try {
-      const response = await axios.post("http://localhost:4000/booking", {
-        user_id: userId,
-        showtime_id: showtimeId,
-        seat_ids: Array.from(selectedSeats),
-      });
-
-      if (response.status === 200) {
-        toast.success("Booking successful!");
-        setSelectedSeats(new Set());
-        setPaymentComplete(false); // Reset payment state
-      } else {
-        toast.error("Failed to book seats. Please try again.");
-      }
-    } catch (error) {
-      console.error("Booking failed", error);
-      toast.error("An error occurred while booking. Please try again.");
-    }
-  };
-
-  const onApprove = async (data: any, actions: any) => {
-    if (!actions.order) {
-      toast.error("Order actions are undefined. Please try again.");
-      return;
-    }
-
-    try {
-      await actions.order.capture();
-      setPaymentComplete(true); // Mark payment as complete
-      toast.success("Payment successful!");
-    } catch (error) {
-      console.error("Payment failed", error);
-      setPayPalError("An error occurred while processing the payment.");
-      toast.error("Payment failed. Please try again.");
-    }
+    // Navigate to payment page with selected seats, total price, and showtimeId
+    navigate(`/payment`, {
+      state: {
+        selectedSeats: selectedSeatDetails, // Pass seat details with seat_number
+        totalPriceUSD,
+        showtimeId, // Pass showtimeId to the PaymentPage
+      },
+    });
   };
 
   if (loading) {
@@ -197,43 +168,11 @@ export default function SeatManagement() {
           <p className="text-2xl font-bold text-gray-700">${totalPriceUSD}</p>
         </div>
 
-        <div className="mt-6">
-          <PayPalButtons
-            style={{ layout: "vertical" }}
-            createOrder={(data, actions) => {
-              console.log("Creating PayPal order with amount:", totalPriceUSD);
-
-              return actions.order.create({
-                intent: "CAPTURE",
-                purchase_units: [
-                  {
-                    amount: {
-                      currency_code: "USD",
-                      value: totalPriceUSD,
-                    },
-                  },
-                ],
-              });
-            }}
-            onApprove={onApprove}
-            onError={(err) => {
-              console.error("PayPal error", err);
-              setPayPalError("An error occurred with PayPal.");
-              toast.error("An error occurred with PayPal. Please try again.");
-            }}
-          />
-        </div>
-
         <button
-          onClick={handleBookNow}
-          disabled={!paymentComplete}
-          className={`mt-6 w-full py-3 rounded-lg text-lg font-semibold ${
-            paymentComplete
-              ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-gray-400 text-white cursor-not-allowed"
-          } transition duration-300`}
+          onClick={handleNext}
+          className="mt-6 w-full py-3 rounded-lg bg-blue-600 text-white text-lg font-semibold hover:bg-blue-700 transition duration-300"
         >
-          Book Now
+          Next
         </button>
       </div>
       <ToastContainer />

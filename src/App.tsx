@@ -10,6 +10,7 @@ import Seat from "./app/seat";
 import SignUp from "./components/signup/SignUp";
 import Movie from "./components/movie/index";
 import SingleMovie from "./components/SIngleMovie";
+import PaymentPage from "./components/payment_handling/Payment";
 
 // PayPal configuration
 const initialOptions = {
@@ -38,6 +39,7 @@ const App: React.FC = () => {
               path="/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
               element={<Seat />}
             />
+            <Route path="/payment" element={<PaymentPage />} />
             <Route path="/signup" element={<SignUp />} />
           </Route>
         </Routes>
