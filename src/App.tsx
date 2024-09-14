@@ -1,3 +1,4 @@
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./hoc/Layout";
@@ -9,31 +10,40 @@ import Seat from "./app/seat";
 import SignUp from "./components/signup/SignUp";
 import Movie from "./components/movie/index";
 import SingleMovie from "./components/SIngleMovie";
-// import NowShowing from './components/movie/NowShowing'
 
-function App() {
+// PayPal configuration
+const initialOptions = {
+  clientId:
+    "AX3kTcjFomhMjqgfARYCr52eXed_niqPM2USFaskn_G9bqbl-HNHaPw8a78Nqix7nbFDAN0lnVdJFlRQ", // Make sure this is correct
+  currency: "USD",
+  intent: "CAPTURE", // You might also want to ensure you're using the right intent
+};
+
+const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        <Route element={<Layout />} path={"/"}>
-          <Route index element={<HomePage />} />
-          <Route path={"/about"} element={<About />} />
-          <Route path="/movies" element={<Movie />} />
-          <Route path="/movie/:movieId" element={<SingleMovie />} />
-          <Route
-            path="/movie/:movieId/theater/:theaterId"
-            element={<MovieTheaterPage />}
-          />
-          <Route path="/login" element={<LoginUi />} />
-          <Route
-            path="/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
-            element={<Seat />}
-          />
-          <Route path="/signup" element={<SignUp />} />
-        </Route>
-      </Routes>
-    </Router>
+    <PayPalScriptProvider options={initialOptions}>
+      <Router>
+        <Routes>
+          <Route element={<Layout />} path={"/"}>
+            <Route index element={<HomePage />} />
+            <Route path={"/about"} element={<About />} />
+            <Route path="/movies" element={<Movie />} />
+            <Route path="/movie/:movieId" element={<SingleMovie />} />
+            <Route
+              path="/movie/:movieId/theater/:theaterId"
+              element={<MovieTheaterPage />}
+            />
+            <Route path="/login" element={<LoginUi />} />
+            <Route
+              path="/seat/movie/:movieId/theater/:theaterId/showtime/:showtimeId"
+              element={<Seat />}
+            />
+            <Route path="/signup" element={<SignUp />} />
+          </Route>
+        </Routes>
+      </Router>
+    </PayPalScriptProvider>
   );
-}
+};
 
 export default App;
