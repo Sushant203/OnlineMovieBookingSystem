@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,13 +12,14 @@ type PaymentSeat = {
 };
 
 type PaymentState = {
-  selectedSeats: PaymentSeat[]; // Array of seat objects with seatid and seat_number
+  selectedSeats: PaymentSeat[];
   totalPriceUSD: string;
-  showtimeId: string; // Add showtimeId to the PaymentState type
+  showtimeId: string;
 };
 
 export default function PaymentPage() {
   const userId = localStorage.getItem("user_id");
+  const navigate = useNavigate(); // Add navigation
 
   // UseLocation to retrieve the state passed from SeatManagement
   const location = useLocation();
@@ -56,9 +57,9 @@ export default function PaymentPage() {
 
       // Prepare the payload for the booking API
       const bookingData = {
-        user_id: userId, // Get the user ID from local storage
-        showtime_id: showtimeId, // Pass the showtime ID
-        seat_ids: seatIds, // Send the array of seat IDs
+        user_id: userId,
+        showtime_id: showtimeId,
+        seat_ids: seatIds,
       };
 
       // Make the booking request to the API
@@ -69,7 +70,13 @@ export default function PaymentPage() {
 
       if (response.status === 200) {
         toast.success("Booking successful!");
-        setBookingComplete(true); // Mark booking as complete
+        setBookingComplete(true);
+
+        // Navigate to the TicketPage and pass the booking details
+        const bookingId = response.data.booking_id; // Assuming booking ID is returned
+        navigate("/ticket", {
+          state: { showtimeId, userId, seatIds, bookingId },
+        });
       } else {
         toast.error("Booking failed. Please try again.");
       }
@@ -95,7 +102,7 @@ export default function PaymentPage() {
           </h2>
           <ul className="list-disc list-inside text-lg text-gray-700">
             {selectedSeats.map((seat) => (
-              <li key={seat.seatid}>{seat.seat_number}</li> // Display seat_number
+              <li key={seat.seatid}>{seat.seat_number}</li>
             ))}
           </ul>
         </div>
@@ -135,7 +142,7 @@ export default function PaymentPage() {
         {paymentComplete && !bookingComplete && (
           <button
             className="mt-6 w-full py-3 rounded-lg bg-green-600 text-white text-lg font-semibold hover:bg-green-700 transition duration-300"
-            onClick={makeBookingRequest} // Trigger the booking API on click
+            onClick={makeBookingRequest}
           >
             Complete Booking
           </button>
@@ -144,7 +151,7 @@ export default function PaymentPage() {
         {/* Show a success message if booking is complete */}
         {bookingComplete && (
           <div className="mt-6 w-full py-3 rounded-lg bg-green-100 text-green-800 text-lg font-semibold text-center">
-            Booking confirmed! Your seats are booked.
+            Booking confirmed! Redirecting to your ticket...
           </div>
         )}
       </div>
