@@ -3,12 +3,13 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { FaDownload, FaBarcode } from "react-icons/fa"; // FontAwesome download and barcode icons
 
 // Define the state structure for the ticket page
 type TicketState = {
   showtimeId: string;
   userId: string;
-  seatNumbers: string[]; // Updated to seatNumbers
+  seatNumbers: string[];
   bookingId: string;
   totalPriceUSD: string;
 };
@@ -26,7 +27,7 @@ type Showtime = {
   show_date: string;
   title: string;
   duration: string;
-  category_name: string;
+  categoryname: string;
   theater_name: string;
   theater_location: string;
 };
@@ -60,7 +61,6 @@ export default function TicketPage() {
     axios
       .get(`http://localhost:4000/showtime/${showtimeId}`)
       .then((response) => {
-        // Check if showtime is an array, and set the first element if true
         const showtimeData = Array.isArray(response.data)
           ? response.data[0]
           : response.data;
@@ -85,56 +85,80 @@ export default function TicketPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 relative">
       <div
-        className="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg"
+        className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg relative"
         id="ticket"
-        style={{ border: "3px solid #333", padding: "20px", maxWidth: "600px" }}
+        style={{
+          border: "2px solid #333",
+          padding: "20px",
+          maxWidth: "600px",
+          position: "relative",
+        }}
       >
-        <h1 className="text-2xl font-bold mb-8 text-center text-gray-800">
+        {/* Download Icon */}
+        <button
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+          onClick={downloadTicketAsPDF}
+        >
+          <FaDownload size={24} />
+        </button>
+
+        {/* Barcode Icon */}
+        <div
+          className="absolute top-4 left-4"
+          style={{ width: "100px", height: "50px" }}
+        >
+          <FaBarcode size={32} />
+        </div>
+
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           Movie Ticket
         </h1>
 
         {/* Movie Ticket Layout */}
         <div
-          className="ticket-container text-center p-4"
-          style={{ border: "2px dashed #333" }}
+          className="ticket-container text-center p-6"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            backgroundColor: "#fafafa",
+            position: "relative",
+          }}
         >
-          <div className="ticket-header mb-6 text-lg font-semibold">
-            {/* <p>Ticket No: {bookingId}</p> */}
-            <p>Theater: 02 / Seat(s): {seatNumbers.join(", ")}</p>
-          </div>
-          <h1>Total Price : ${totalPriceUSD}</h1>
-          {showtime && (
-            <div className="ticket-details mb-6">
-              <h2 className="text-xl font-bold mb-2">{showtime.title}</h2>
-              <p>Date: {new Date(showtime.show_date).toLocaleDateString()}</p>
-              <p>Time: {showtime.show_time}</p>
-              <p>Category: {showtime.category_name}</p>
-              <p>Duration: {showtime.duration}</p>
-              <p>
-                Theater: {showtime.theater_name}, {showtime.theater_location}
-              </p>
+          <div className="flex justify-between items-center mb-4">
+            <div className="text-sm font-semibold text-gray-600">
+              {/* <p className="mb-1">Booking ID: {bookingId}</p> */}
+              <p>Seats: {seatNumbers.join(", ")}</p>
             </div>
-          )}
+            <div className="text-lg font-bold text-gray-800">
+              ${totalPriceUSD}
+            </div>
+          </div>
+
+          <div className="ticket-header mb-4 text-lg font-semibold">
+            <p className="text-sm mb-1">Movie:</p>
+            <h2 className="text-xl font-bold mb-2">{showtime?.title}</h2>
+            <p>
+              Date: {new Date(showtime?.show_date || "").toLocaleDateString()}
+            </p>
+            <p>Time: {showtime?.show_time || ""}</p>
+            <p>Duration: {showtime?.duration}</p>
+            <p>
+              Theater: {showtime?.theater_name}, {showtime?.theater_location}
+            </p>
+          </div>
 
           {user && (
-            <div className="ticket-user-info">
-              <p>Name: {user.fullname}</p>
+            <div className="ticket-user-info mt-6">
+              <p className="font-semibold text-gray-700">
+                Name: {user.fullname}
+              </p>
               <p>Email: {user.email}</p>
               <p>Phone: {user.phoneno}</p>
               <p>Age: {calculateAge(user.dateofbirth)} years</p>
             </div>
           )}
-        </div>
-
-        <div className="mt-6">
-          <button
-            className="w-full py-3 rounded-lg bg-blue-600 text-white text-lg font-semibold hover:bg-blue-700 transition duration-300"
-            onClick={downloadTicketAsPDF}
-          >
-            Download Ticket
-          </button>
         </div>
       </div>
     </div>
