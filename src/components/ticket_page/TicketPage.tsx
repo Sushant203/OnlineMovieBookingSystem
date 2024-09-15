@@ -3,7 +3,15 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { FaDownload, FaBarcode } from "react-icons/fa"; // FontAwesome download and barcode icons
+import {
+  FaDownload,
+  FaBarcode,
+  FaFilm,
+  FaCalendarAlt,
+  FaClock,
+  FaUser,
+} from "react-icons/fa";
+import { format } from "date-fns";
 
 // Define the state structure for the ticket page
 type TicketState = {
@@ -84,6 +92,14 @@ export default function TicketPage() {
     });
   };
 
+  // Format date and time
+  const formattedDate = showtime
+    ? format(new Date(showtime.show_date), "MMMM d")
+    : "";
+  const formattedTime = showtime
+    ? format(new Date(`${showtime.show_date}T${showtime.show_time}`), "h:mm a")
+    : "";
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 relative">
       <div
@@ -118,7 +134,7 @@ export default function TicketPage() {
 
         {/* Movie Ticket Layout */}
         <div
-          className="ticket-container text-center p-6"
+          className="ticket-container text-left p-6"
           style={{
             border: "1px solid #ddd",
             borderRadius: "8px",
@@ -127,8 +143,8 @@ export default function TicketPage() {
           }}
         >
           <div className="flex justify-between items-center mb-4">
-            <div className="text-sm font-semibold text-gray-600">
-              {/* <p className="mb-1">Booking ID: {bookingId}</p> */}
+            <div className="text-sm font-semibold text-gray-600 flex items-center">
+              <FaFilm className="mr-2" />
               <p>Seats: {seatNumbers.join(", ")}</p>
             </div>
             <div className="text-lg font-bold text-gray-800">
@@ -136,27 +152,40 @@ export default function TicketPage() {
             </div>
           </div>
 
-          <div className="ticket-header mb-4 text-lg font-semibold">
-            <p className="text-sm mb-1">Movie:</p>
-            <h2 className="text-xl font-bold mb-2">{showtime?.title}</h2>
-            <p>
-              Date: {new Date(showtime?.show_date || "").toLocaleDateString()}
-            </p>
-            <p>Time: {showtime?.show_time || ""}</p>
-            <p>Duration: {showtime?.duration}</p>
-            <p>
-              Theater: {showtime?.theater_name}, {showtime?.theater_location}
-            </p>
+          <div className="ticket-header mb-4">
+            <div className="flex items-center mb-2 text-gray-600">
+              <FaCalendarAlt className="mr-2" />
+              <p className="text-lg font-semibold">{formattedDate}</p>
+            </div>
+            <div className="flex items-center mb-2 text-gray-600">
+              <FaClock className="mr-2" />
+              <p className="text-lg font-semibold">{formattedTime}</p>
+            </div>
+            <div className="text-lg font-semibold mb-2">
+              <p className="text-sm mb-1">Movie:</p>
+              <h2 className="text-xl font-bold text-gray-800">
+                {showtime?.title}
+              </h2>
+              <p className="text-gray-600">Duration: {showtime?.duration}</p>
+              <p className="text-gray-600">
+                Theater: {showtime?.theater_name}, {showtime?.theater_location}
+              </p>
+            </div>
           </div>
 
           {user && (
             <div className="ticket-user-info mt-6">
-              <p className="font-semibold text-gray-700">
-                Name: {user.fullname}
+              <div className="flex items-center mb-2 text-gray-600">
+                <FaUser className="mr-2" />
+                <p className="font-semibold text-gray-700">
+                  Name: {user.fullname}
+                </p>
+              </div>
+              <p className="text-gray-600">Email: {user.email}</p>
+              <p className="text-gray-600">Phone: {user.phoneno}</p>
+              <p className="text-gray-600">
+                Age: {calculateAge(user.dateofbirth)} years
               </p>
-              <p>Email: {user.email}</p>
-              <p>Phone: {user.phoneno}</p>
-              <p>Age: {calculateAge(user.dateofbirth)} years</p>
             </div>
           )}
         </div>
