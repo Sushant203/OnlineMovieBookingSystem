@@ -52,8 +52,9 @@ export default function PaymentPage() {
 
   const makeBookingRequest = async () => {
     try {
-      // Extract seat IDs for the booking request
+      // Extract seat IDs and seat numbers for the booking request
       const seatIds = selectedSeats.map((seat) => seat.seatid);
+      const seatNumbers = selectedSeats.map((seat) => seat.seat_number);
 
       // Prepare the payload for the booking API
       const bookingData = {
@@ -72,10 +73,10 @@ export default function PaymentPage() {
         toast.success("Booking successful!");
         setBookingComplete(true);
 
-        // Navigate to the TicketPage and pass the booking details
+        // Navigate to the TicketPage and pass the booking details along with seat numbers
         const bookingId = response.data.booking_id; // Assuming booking ID is returned
         navigate("/ticket", {
-          state: { showtimeId, userId, seatIds, bookingId },
+          state: { showtimeId, userId, seatNumbers, bookingId, totalPriceUSD }, // Pass totalPriceUSD to TicketPage
         });
       } else {
         toast.error("Booking failed. Please try again.");
