@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import { Card, CardContent } from "../../components/ui/card";
+import Hero2 from "/hero1.png";
+import Hero3 from "/hero2.png";
 import {
   Carousel,
   CarouselContent,
@@ -10,54 +11,35 @@ import {
 } from "../../components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-type Movie = {
-  poster: string;
-};
-
 const Hero = () => {
-  const [carouselData, setCarouselData] = useState<Movie[]>([]);
-
-  useEffect(() => {
-    // Fetch movie posters from the database
-    const fetchImagePoster = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:4000/movie/now-showing"
-        ); // Replace with your actual API endpoint
-        setCarouselData(response.data);
-      } catch (error) {
-        console.error("Error fetching movie data:", error);
-      }
-    };
-    fetchImagePoster();
-  }, []);
+  // Static array of local images
+  const carouselData = [{ poster: Hero2 }, { poster: Hero3 }];
 
   return (
     <section className="relative">
       <Carousel
         plugins={[
           Autoplay({
-            delay: 2000,
+            delay: 3000, // Increased delay for better user experience
           }),
         ]}
         opts={{
           align: "center",
           loop: true,
         }}
-        className="w-11/12 h-3/4 mx-auto"
+        className="w-full h-[80vh] mx-auto" // Adjusted height for better view
       >
         <CarouselContent>
           {carouselData.map((item, index) => (
-            <CarouselItem key={index} className="w-fit h-fit">
-              <div className="p-1 h-full">
-                <Card className="w-full mx-auto">
-                  <CardContent className="flex items-center justify-center p-0 h-[75vh]">
-                    <div className="w-full h-full aspect-w-16 aspect-h-9">
+            <CarouselItem key={index} className="w-full h-full">
+              <div className="flex items-center justify-center p-2">
+                <Card className="w-full h-full shadow-lg rounded-lg overflow-hidden">
+                  <CardContent className="flex items-center justify-center p-0 h-full">
+                    <div className="w-full h-full">
                       <img
-                        src={`http://localhost:4000/${item.poster}`}
-                        alt={item.poster}
-                        sizes="100vw"
-                        className="h-full w-full object-contain"
+                        src={item.poster}
+                        alt={`Hero image ${index + 1}`}
+                        className="w-full h-full object-cover" // Changed to object-cover for better fit
                       />
                     </div>
                   </CardContent>
@@ -66,8 +48,8 @@ const Hero = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg" />
-        <CarouselNext className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg" />
+        <CarouselPrevious className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full p-3 shadow-lg cursor-pointer hover:bg-gray-200 transition" />
+        <CarouselNext className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full p-3 shadow-lg cursor-pointer hover:bg-gray-200 transition" />
       </Carousel>
     </section>
   );
