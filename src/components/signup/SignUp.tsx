@@ -18,7 +18,7 @@ const SignUp = () => {
     try {
       const res = await axios.post("http://localhost:4000/register/register", values);
       console.log("responses:", res.status);
-      if (res.status === 201) {
+      if (res.status === 200 || res.status === 201) {
           console.log("Navigating to login...");
         navigate("/login");
       }

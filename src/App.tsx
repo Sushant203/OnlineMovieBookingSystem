@@ -7,6 +7,7 @@ import MovieTheaterPage from "./components/movie/MovieTheater";
 import LoginUi from "./components/login/LoginUi";
 import Seat from "./app/seat";
 import SignUp from "./components/signup/SignUp";
+import Contact from "./pages/Contact";
 // import NowShowing from './components/movie/NowShowing'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             element={<Seat />}
           />
           <Route path="/signup" element={<SignUp />}/>
+          <Route path="/contact" element={<Contact />}/>
         </Route>
       </Routes>
     </Router>

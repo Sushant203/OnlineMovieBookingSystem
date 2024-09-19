@@ -11,7 +11,7 @@ export enum EInputType {
     TEXTAREA = 'textarea',
     SELECT = 'select',
 }
-type TInputType = 'text' | 'email' | 'password' | 'file' | 'checkbox' | 'radio' | 'date' | 'number'
+type TInputType = 'text' | 'email' | 'password' | 'file' | 'checkbox' | 'radio' | 'date' | 'number' | 'textarea'
 export type TFormField<T> = ({
     type: TInputType;
 
