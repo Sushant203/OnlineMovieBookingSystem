@@ -98,77 +98,79 @@ export default function SeatManagement() {
     return <Loader />;
   }
 
+  const seatRows = seats.reduce((acc: { [key: string]: Seat[] }, seat) => {
+    const row = seat.seat_number.match(/[A-Z]/)?.[0] || "Unknown";
+    if (!acc[row]) acc[row] = [];
+    acc[row].push(seat);
+    return acc;
+  }, {});
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 p-6">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-4xl">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+    <div className="flex flex-col min-h-screen bg-gray-200 p-4">
+      <div className="bg-white rounded-lg shadow-xl p-4 w-full max-w-5xl mx-auto">
+        <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">
           Select Your Seats
         </h1>
-        <div className="relative mb-10">
-          <div className="flex justify-center">
+        <div className="relative mb-8">
+          <div className="flex justify-center mb-4">
             <div className="bg-gray-900 text-white p-3 rounded-t-full w-full text-center border">
               SCREEN
             </div>
           </div>
-        </div>
-        <div className="space-y-6">
-          {Object.keys(
-            seats.reduce((acc: { [key: string]: Seat[] }, seat) => {
-              const row = seat.seat_number.match(/[A-Z]/)?.[0] || "Unknown";
-              if (!acc[row]) acc[row] = [];
-              acc[row].push(seat);
-              return acc;
-            }, {})
-          ).map((rowKey) => (
-            <div key={rowKey} className="flex items-center mb-4">
-              <span className="w-10 text-center font-semibold text-gray-700 text-lg">
-                {rowKey}
-              </span>
-              <div className="grid grid-cols-10 gap-2">
-                {seats
-                  .filter((seat) => seat.seat_number.startsWith(rowKey))
-                  .sort(
-                    (a, b) =>
-                      parseInt(a.seat_number.replace(/[^\d]/g, ""), 10) -
-                      parseInt(b.seat_number.replace(/[^\d]/g, ""), 10)
-                  )
-                  .map((seat) => (
-                    <label
-                      key={seat.seatid}
-                      className={`flex items-center justify-center cursor-pointer w-10 h-10 border rounded-md ${
-                        seat.status === "Booked" || seat.status === "Reserved"
-                          ? "bg-gray-500 cursor-no-drop"
-                          : selectedSeats.has(seat.seatid)
-                          ? "bg-blue-600 text-white"
-                          : "bg-white"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        disabled={
-                          seat.status === "Booked" || seat.status === "Reserved"
-                        }
-                        checked={selectedSeats.has(seat.seatid)}
-                        onChange={() =>
-                          handleSeatClick(seat.seatid, seat.status)
-                        }
-                        className="sr-only"
-                      />
-                      <span className="text-center text-sm font-semibold">
-                        {seat.seat_number}
-                      </span>
-                    </label>
-                  ))}
+          <div className="overflow-x-auto">
+            {Object.keys(seatRows).map((rowKey) => (
+              <div key={rowKey} className="flex items-center mb-4">
+                <span className="w-12 text-center font-semibold text-gray-700 text-lg mr-2">
+                  {rowKey}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {seatRows[rowKey]
+                    .sort(
+                      (a, b) =>
+                        parseInt(a.seat_number.replace(/[^\d]/g, ""), 10) -
+                        parseInt(b.seat_number.replace(/[^\d]/g, ""), 10)
+                    )
+                    .map((seat) => (
+                      <label
+                        key={seat.seatid}
+                        className={`flex items-center justify-center cursor-pointer w-12 h-12 border rounded-md ${
+                          seat.status === "Booked"
+                            ? "bg-gray-500 cursor-not-allowed"
+                            : seat.status === "Reserved"
+                            ? "bg-gray-300 cursor-not-allowed"
+                            : selectedSeats.has(seat.seatid)
+                            ? "bg-blue-600 text-white"
+                            : "bg-white"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          disabled={
+                            seat.status === "Booked" ||
+                            seat.status === "Reserved"
+                          }
+                          checked={selectedSeats.has(seat.seatid)}
+                          onChange={() =>
+                            handleSeatClick(seat.seatid, seat.status)
+                          }
+                          className="sr-only"
+                        />
+                        <span className="text-center text-sm font-semibold">
+                          {seat.seat_number}
+                        </span>
+                      </label>
+                    ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <div className="mt-8 p-4 bg-gray-100 rounded-lg shadow-md">
+        <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold text-gray-800">Total Price</h2>
           <p className="text-2xl font-bold text-gray-700">${totalPriceUSD}</p>
         </div>
 
-        <div className="mt-8 p-4 bg-gray-100 rounded-lg shadow-md">
+        <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold text-gray-800">
             Seat Color Definitions
           </h2>

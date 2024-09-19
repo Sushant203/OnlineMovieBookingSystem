@@ -10,6 +10,7 @@ import {
   FaCalendarAlt,
   FaClock,
   FaUser,
+  FaVoicemail,
 } from "react-icons/fa";
 import { format } from "date-fns";
 
@@ -166,23 +167,26 @@ export default function TicketPage() {
               <h2 className="text-xl font-bold text-gray-800">
                 {showtime?.title}
               </h2>
-              <p className="text-gray-600">Duration: {showtime?.duration}</p>
               <p className="text-gray-600">
-                Theater: {showtime?.theater_name}, {showtime?.theater_location}
+                Duration: {showtime?.duration} minute
+              </p>
+              <p className="text-gray-600">
+                Theater: {showtime?.theater_name} , {showtime?.theater_location}
               </p>
             </div>
           </div>
 
           {user && (
             <div className="ticket-user-info mt-6">
+              <h1>Your Details</h1>
               <div className="flex items-center mb-2 text-gray-600">
                 <FaUser className="mr-2" />
                 <p className="font-semibold text-gray-700">
                   Name: {user.fullname}
                 </p>
               </div>
-              <p className="text-gray-600">Email: {user.email}</p>
-              <p className="text-gray-600">Phone: {user.phoneno}</p>
+              <p className="text-gray-600">{user.email}</p>
+              <p className="text-gray-600"> {user.phoneno}</p>
               <p className="text-gray-600">
                 Age: {calculateAge(user.dateofbirth)} years
               </p>
