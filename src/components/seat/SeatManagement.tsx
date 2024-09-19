@@ -168,6 +168,30 @@ export default function SeatManagement() {
           <p className="text-2xl font-bold text-gray-700">${totalPriceUSD}</p>
         </div>
 
+        <div className="mt-8 p-4 bg-gray-100 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Seat Color Definitions
+          </h2>
+          <ul className="list-disc pl-5 mt-2 text-gray-700">
+            <li>
+              <span className="inline-block w-5 h-5 bg-blue-600"></span>{" "}
+              <strong>Selected:</strong> Seat is selected by you.
+            </li>
+            <li>
+              <span className="inline-block w-5 h-5 bg-gray-500"></span>{" "}
+              <strong>Booked:</strong> Seat is already booked.
+            </li>
+            <li>
+              <span className="inline-block w-5 h-5 bg-gray-300"></span>{" "}
+              <strong>Reserved:</strong> Seat is reserved for someone else.
+            </li>
+            <li>
+              <span className="inline-block w-5 h-5 bg-white border border-gray-400"></span>{" "}
+              <strong>Available:</strong> Seat is available for booking.
+            </li>
+          </ul>
+        </div>
+
         <button
           onClick={handleNext}
           className="mt-6 w-full py-3 rounded-lg bg-blue-600 text-white text-lg font-semibold hover:bg-blue-700 transition duration-300"
