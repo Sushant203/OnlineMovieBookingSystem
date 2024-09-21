@@ -76,7 +76,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4 cursor-pointer">
               <div className="flex flex-col text-sm text-center">
                 <p className="text-gray-400">Welcome</p>
-                <h1>{userData.fullname}</h1>
+                <h1 className="capitalize">{userData.fullname}</h1>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger>
