@@ -1,5 +1,8 @@
 import React from "react";
 import { Card, CardContent } from "../../components/ui/card";
+import H1 from "/1.jpg";
+import H2 from "/2.jpg";
+import H3 from "/3.jpg";
 import Hero2 from "/hero1.png";
 import Hero3 from "/hero2.png";
 import {
@@ -13,7 +16,13 @@ import Autoplay from "embla-carousel-autoplay";
 
 const Hero = () => {
   // Static array of local images
-  const carouselData = [{ poster: Hero2 }, { poster: Hero3 }];
+  const carouselData = [
+    { poster: H1 },
+    // { poster: H2 },
+    { poster: H3 },
+    // { poster: Hero2 },
+    { poster: Hero3 },
+  ];
 
   return (
     <section className="relative">

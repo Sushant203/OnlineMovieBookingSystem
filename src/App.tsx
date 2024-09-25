@@ -12,7 +12,6 @@ import Movie from "./components/movie/index";
 import SingleMovie from "./components/SIngleMovie";
 import PaymentPage from "./components/payment_handling/Payment";
 import TicketPage from "./components/ticket_page/TicketPage";
-import { Contact } from "lucide-react";
 import ContactUs from "./app/contact/ContactUs";
 
 // PayPal configuration
