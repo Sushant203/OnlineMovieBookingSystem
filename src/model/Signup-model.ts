@@ -5,16 +5,24 @@ import * as Yup from "yup";
 // import { FaUser } from "react-icons/fa";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// const nameRegex = /^@[Aa-zZ\s]*$/;
-// const phoneRegex = /^\d*$/;
+const nameRegex = /^[a-zA-Z\s]*$/; // Ensures no numbers in fullname
+const phoneRegex = /^\d*$/;
+const dobRegex = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/; // YYYY-MM-DD format
 
 export const signUpFormSchema = Yup.object({
-  fullname: Yup.string().required("Please enter your full name"),
-  phoneno: Yup.string(),
-  //     .matches(phoneRegex, "Enter the number digits only")
-  //     .min(10, "Number should have 10 digits")
-  //     .required("Please enter your phone number"),
-  dateofbirth: Yup.string().required("enter your date of birth"),
+  fullname: Yup.string()
+    .required("Please enter your full name")
+    .matches(nameRegex, "name cannot include any numbers"),
+  phoneno: Yup.string()
+    .matches(phoneRegex, "Enter the number digits only")
+    .min(10, "Number should have 10 digits")
+    .required("Please enter your phone number"),
+  dateofbirth: Yup.string()
+    .required("enter your date of birth")
+    .matches(dobRegex, "Date of birth must follow YYYY-MM-DD format")
+    .test("DOB", "Date of birth cannot be in the future", (value) => {
+      return new Date(value) <= new Date(); // Check that the date is not in the future
+    }),
   email: Yup.string()
     .matches(
       emailRegex,
